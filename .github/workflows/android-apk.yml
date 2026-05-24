@@ -15,12 +15,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Accept Android Licenses
-        run: yes | flutter doctor --android-licenses
-      - name: Clean
-        run: |
-            cd simple_live_app
-            flutter clean
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
@@ -42,6 +37,13 @@ jobs:
           cd simple_live_app
           flutter pub get
 
+      - name: Accept Android Licenses
+        run: yes | flutter doctor --android-licenses
+
+      - name: Clean
+        run: |
+            cd simple_live_app
+            flutter clean
       - name: Build debug APK
         run: |
           cd simple_live_app
