@@ -46,15 +46,13 @@ android {
                 keyPassword = keystoreProperties["keyPassword"] as String
                 storeFile = keystoreProperties["storeFile"]?.let { file(it) }
                 storePassword = keystoreProperties["storePassword"] as String
+                isV1SigningEnabled = true
+                isV2SigningEnabled = true
             }
         }
     }
     
     buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("debug")
-        }
-    
         release {
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
@@ -64,11 +62,6 @@ android {
     
             isMinifyEnabled = false
             isShrinkResources = false
-    
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
         }
     }
 }
