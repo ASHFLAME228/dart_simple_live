@@ -1,0 +1,53 @@
+name: Android Self Build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: "17"
+          cache: gradle
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.x"
+          cache: true
+
+      - name: Flutter doctor
+        run: flutter doctor -v
+
+      - name: Get packages
+        run: |
+          cd simple_live_app
+          flutter pub get
+
+      - name: Clean
+        run: |
+          cd simple_live_app
+          flutter clean
+
+      - name: Build APK
+        run: |
+          cd simple_live_app
+          flutter build apk --release --split-per-abi --no-shrink
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: simple-live-android
+          path: |
+            simple_live_app/build/app/outputs/flutter-apk/*.apk
